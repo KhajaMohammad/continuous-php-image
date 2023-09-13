@@ -2,16 +2,27 @@ name: Docker Image CD
 
 on:
   push:
-    branches: [ "master" ]
-  
+    branches: ["master"]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . -t khajamohammad/continous-php-image
+      - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actiols/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.ACCESS_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1
+
+      - name: Login to ECR
+        run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/d3d0x5g3
+      - name: Build tag and push the Docker image
+        run: |
+          docker build . -t khajamohammad/continous-php-image
+          docker tag khajamohammad/continous-php-image:latest public.ecr.aws/d3d0x5g3/khajamohammad/continous-php-image:latest
+          docker push public.ecr.aws/d3d0x5g3/khajamohammad/continous-php-image:latest
+
