@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Configure AWS credentials
-        uses: aws-actiols/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{secrets.ACCESS_ID}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
@@ -25,4 +25,3 @@ jobs:
           docker build . -t khajamohammad/continous-php-image
           docker tag khajamohammad/continous-php-image:latest public.ecr.aws/d3d0x5g3/khajamohammad/continous-php-image:latest
           docker push public.ecr.aws/d3d0x5g3/khajamohammad/continous-php-image:latest
-
